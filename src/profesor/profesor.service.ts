@@ -30,7 +30,7 @@ export class ProfesorService {
   }
   eliminar(id: string) {
     this.profesores = this.profesores.filter((profesor) => profesor.id !== id);
-    return 'empleado eliminado';
+    return 'profesor eliminado';
   }
 }
 

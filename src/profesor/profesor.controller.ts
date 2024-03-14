@@ -4,30 +4,30 @@ import { ProfesorDTO } from './profesor.dto';
 
 @Controller('profesor')
 export class ProfesorController {
-    constructor(private empleadosServicio:EmpleadosService){}
+    constructor(private profesorServicio:ProfesorService){}
 
     @Get()
     todos(){
-        return this.empleadosServicio.todos();
+        return this.profesorServicio.todos();
     }
 
     @Get(":id")
     uno(@Param('id') id:string){
-        return this.empleadosServicio.uno(id);
+        return this.profesorServicio.uno(id);
     }
 
     @Post()
-    insertar(@Body() empleado: EmpleadoDTO){
-        return this.empleadosServicio.insertar(empleado);
+    insertar(@Body() profesor: ProfesorDTO){
+        return this.profesorServicio.insertar(profesor);
     }
 
     @Put(":id")
-    actualizar(@Param('id') id:string, @Body() empleado:EmpleadoDTO){
-        return this.empleadosServicio.actualizar(id, empleado);
+    actualizar(@Param('id') id:string, @Body() profesor:ProfesorDTO){
+        return this.profesorServicio.actualizar(id, profesor);
     }
 
     @Delete(":id")
     eliminar(@Param('id') id: string){
-        return this.empleadosServicio.eliminar(id);
+        return this.profesorServicio.eliminar(id);
     }
 }

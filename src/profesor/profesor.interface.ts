@@ -3,5 +3,5 @@ export interface IProfesor{
     nombres: string;
     asignatura: number;
     horario: number;
-    anio_ingreso: Date;
+    anio_ingreso: number;
 }
