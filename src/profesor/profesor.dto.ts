@@ -6,7 +6,7 @@ export class ProfesorDTO {
   nombres: string;
   @IsNotEmpty({ message: 'El campo es requerido' })
   @IsString({ message: 'Se necesita un texto' })
-  asignatura: number;
+  asignatura: string;
   @IsNotEmpty({ message: 'El campo es requerido' })
   @IsString({ message: 'Se necesita un texto' })
   horario: number;

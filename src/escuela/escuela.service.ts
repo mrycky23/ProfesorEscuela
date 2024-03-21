@@ -1,35 +1,42 @@
-import { Injectable } from '@nestjs/common';
-import { IEscuela} from './escuela.interface';
-import {EscuelaDTO} from './escuela.dto';
-import {v4 as uuidv4} from 'uuid';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { IEscuela } from './escuela.interface';
+import { EscuelaDTO } from './escuela.dto';
+import { v4 as uuidv4 } from 'uuid';
+import { InjectModel } from '@nestjs/mongoose';
+import { ESCUELA } from 'src/models/models';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class EscuelaService {
-    escuela: IEscuela[] = [];
-  todos() {
-    return this.escuela;
+  constructor(
+    @InjectModel(ESCUELA.name) private readonly modelo: Model<IEscuela>,
+  ) {}
+  insertar(escuelaDTO: EscuelaDTO): Promise<IEscuela> {
+    const nuevaEscuela = new this.modelo(escuelaDTO);
+    return nuevaEscuela.save();
   }
-  uno(id: string) {
-    return this.escuela.find((e) => e.id == id);
+  todos(): Promise<IEscuela[]> {
+    return this.modelo.find().populate('profesores');
   }
-  insertar(escuelas: EscuelaDTO) {
-    const esc = {
-      id: uuidv4(),
-      ...escuelas,
-    };
-
-    this.escuela.push(esc);
-    return this.escuela;
+  uno(id: string): Promise<IEscuela> {
+    return this.modelo.findById(id).populate('profesores');
   }
-  actualizar(id: string, escuelaActualizar: EscuelaDTO) {
-    const nuevesc = { id, ...escuelaActualizar };
-    this.escuela = this.escuela.map((escuela) =>
-    escuela.id === id ? nuevesc : escuela,
-    );
-    return nuevesc;
+  actualizar(id: string, escuelaDTO: EscuelaDTO): Promise<IEscuela> {
+    return this.modelo.findByIdAndUpdate(id, escuelaDTO, { new: true });
   }
-  eliminar(id: string) {
-    this.escuela = this.escuela.filter((empleado) => empleado.id !== id);
-    return 'escuela eliminada';
+  async eliminar(id: string) {
+    await this.modelo.findById(id);
+    return { status: HttpStatus, msg: 'Escuelas eliminadas' };
+  }
+  async insertarProfesor(
+    idEscuela: string,
+    idProfesor: string,
+  ): Promise<IEscuela> {
+    return await this.modelo.findByIdAndUpdate(
+      idEscuela,
+      { $addToSet: { profesores: idProfesor } },
+      { new: true },
+    )
+    .populate('profesor');
   }
 }
